@@ -1,0 +1,60 @@
+version: "3"
+services:
+    nginx:
+        container_name: nginx
+        image: nginx:latest
+        ports:
+            - 81:80
+        volumes:
+            - './src:/var/www/html'
+            - './_docker/nginx/conf.d:/etc/nginx/conf.d'
+        networks:
+            - backend
+        depends_on:
+            - application
+    application:
+        container_name: project
+        build:
+            context: ./_docker/php
+        volumes:
+            - './src:/var/www/html'
+        networks:
+            - backend
+        depends_on:
+            - mysql
+            - redis
+    mysql:
+        container_name: mysql
+        image: mysql:8
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: docker
+        volumes:
+            - './db:/var/lib/mysql'
+        networks:
+            - backend
+    adminer:
+        container_name: adminer
+        image: adminer
+        ports:
+            - 8080:8080
+        networks:
+            - backend
+        depends_on:
+            - mysql
+    redis:
+        container_name: redis
+        image: redis
+        restart: always
+        ports:
+            - "6379:6379"
+        volumes:
+            - /opt/docker/redis/etc:/usr/local/etc/redis
+        command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+        networks:
+            - backend
+
+networks:
+    backend:
+    frontend:
