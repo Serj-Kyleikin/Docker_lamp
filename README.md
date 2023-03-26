@@ -3,7 +3,7 @@
 
 Настройка REDIS
 
-1) Создать конфигурационный файл /opt/docker/redis/etc/redis.conf с данными авторизации: requirepass password (passsword - заменить на пароль)
+1) Создать конфигурационный файл /opt/docker/redis/etc/redis.conf с данными авторизации: requirepass somePassword
 2) Создать файл сборки /opt/docker/redis/docker-compose.yml
 
 redis:
